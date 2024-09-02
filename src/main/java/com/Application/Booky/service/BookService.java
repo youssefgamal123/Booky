@@ -10,6 +10,7 @@ import com.Application.Booky.repository.BookRepository;
 import com.Application.Booky.repository.TransactionHistoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 
 public class BookService {
@@ -37,7 +39,11 @@ public class BookService {
     public Integer  save(BookRequest request, Authentication connectedUser) {
 
         User user = ( (User) connectedUser.getPrincipal());
-        Book book = bookMapper.toBook(request);
+        System.out.println("HELLLLLLLLLLLLLLLO");
+        System.out.println(user);
+      //  log.info("User={}",user);
+        Book book = bookMapper.toBook(request,user);
+       // log.info("UserPrincpal={}",connectedUser.getPrincipal());
         book.setOwner(user);
 
 

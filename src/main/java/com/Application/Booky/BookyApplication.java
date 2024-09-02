@@ -1,6 +1,6 @@
 package com.Application.Booky;
 
-import com.Application.Booky.entity.role;
+import com.Application.Booky.entity.Role;
 import com.Application.Booky.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +26,7 @@ public class BookyApplication {
 		return args -> {
 
 			if (roleRepository.findByname("USER").isEmpty() ){
-				roleRepository.save(role.builder().name("USER").build());
+				roleRepository.save(Role.builder().name("USER").build());
 			}
 
 

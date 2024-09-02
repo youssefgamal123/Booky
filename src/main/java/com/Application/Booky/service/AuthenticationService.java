@@ -7,16 +7,19 @@ import com.Application.Booky.entity.User;
 import com.Application.Booky.repository.RoleRepository;
 import com.Application.Booky.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
@@ -37,8 +40,8 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
+                .role(userRole)
                 .enabled(false)
-                .roles(List.of(userRole))
                 .build();
 
         userRepository.save(user); // Save the user to the database
@@ -47,21 +50,26 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
-        var auth= authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        var claims = new HashMap<String, Object>();
-        var user = ((User) auth.getPrincipal());
-        var jwtToken = jwtService.generateToken(claims,user);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String jwtToken = jwtService.generateToken(userDetails);
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
-
-
-
+            log.info("User authenticated successfully. Generating JWT token for email: {}", request.getEmail());
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        } catch (Exception e) {
+            log.error("Authentication failed for email: {}", request.getEmail(), e);
+            throw e;
+        }
+    }
     }
 
 
 
 
-}
+

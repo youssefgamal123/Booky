@@ -3,6 +3,7 @@ package com.Application.Booky.entity;
 import com.Application.Booky.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,8 +12,8 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Book extends BaseEntity {
 
@@ -26,21 +27,18 @@ public class Book extends BaseEntity {
     private boolean archived;
     private boolean shareable;
 
+    public Book(String title, String authorName, boolean shareable, User owner) {
+        this.title = title;
+        this.authorName = authorName;
+        this.shareable = shareable;
+        this.owner = owner;
 
-
-
-
-
-
+    }
 
     // User can own many books, a book can be owned by one user
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany(mappedBy = "book") // One book can have many feedbacks
-    private List<feedback> feedbacks; // Ensure correct naming conventions
 
-    @OneToMany(mappedBy = "book") // One book can have many transactions
-    private List<BookTransactionHistory> histories; // Ensure correct naming conventions
 }

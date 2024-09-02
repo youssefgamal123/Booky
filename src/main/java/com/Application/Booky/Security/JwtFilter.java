@@ -27,12 +27,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
+
+       System.out.println("Path = "+request.getServletPath());
+        if (request.getServletPath().contains("/auth")) {
+            System.out.println("WhiteListed end point ");
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader("Authorization");
+        log.info("authHeader={}",authHeader);
         final String jwt;
         final String userEmail;
 
@@ -66,3 +70,30 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+
+/*
+
+Bearer
+eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0Mj
+JheWFAZ21haWwuY29tIiwiaWF0IjoxNzI1MDM5MjIwLCJleHAiOjE3MjUwNDI4MjAsImF1dGhvcml0aWVzIjpbIlVTRVIiXX0
+.jeVMRF66wZBCWq2DWMZ_7J26gjXsVzwA3Qm4p2UET4TFRyIKzXxU1SaJ0IvKghCx
+
+
+  eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0MjJheWFAZ21haWwuY29tIiwiaWF0IjoxNzI1MDM5MjIwLCJleHAiOjE3MjUwNDI4MjAsImF1dGhvcml0aWVzIjpbIlVTRVIiXX0.
+  jeVMRF66wZBCWq2DWMZ_7J26gjXsVzwA3Qm4p2UET4TFRyIKzXxU1SaJ0IvKghCx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ */

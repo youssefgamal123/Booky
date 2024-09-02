@@ -13,25 +13,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.management.relation.Role;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = "`user`")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal {
+public class User implements UserDetails{
 
     @Id
-    @GeneratedValue() // Use IDENTITY for auto-increment
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Use IDENTITY for auto-increment
     private Integer id;
 
     private String firstname;
@@ -56,29 +52,22 @@ public class User implements UserDetails, Principal {
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "_user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<role> roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false )
+    private Role role;
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
-    public String getName() {
-        return email;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(r -> new SimpleGrantedAuthority(r.getName()))
-                .collect(Collectors.toList());
+
+        return List.of(new SimpleGrantedAuthority(role.getName())) ;
+
+
     }
 
     @Override
@@ -95,9 +84,7 @@ public class User implements UserDetails, Principal {
         return firstname + " " + lastname;
     }
 
-    @OneToMany(mappedBy = "owner") // one user to many books
-    private List<Book> books;
 
-    @OneToMany(mappedBy = "user") // one user can have many transactions
-    private List<BookTransactionHistory> histories;
+
+
 }

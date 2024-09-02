@@ -3,27 +3,26 @@ package com.Application.Booky.service;
 
 import com.Application.Booky.entity.Book;
 import com.Application.Booky.entity.BookTransactionHistory;
+import com.Application.Booky.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BookMapper {
 
 
-    public Book toBook(BookRequest request) {
-
-        /*
-        return Book.builder()
-                .id(request.id())
-                .//title(request.title())
-        //.authorName(request.authorName())
-                .shareable(request.Shareable())
-                .archived(false)
-                .build();
+    public Book toBook(BookRequest request , User user) {
 
 
-         */
+        return new Book(
+                request.title(),
+                request.authorName(),
+                request.Shareable(),
+                user
 
-       return null;
+        ) ;
+
+
+
 
     }
 
