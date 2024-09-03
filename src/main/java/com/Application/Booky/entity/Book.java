@@ -27,11 +27,15 @@ public class Book extends BaseEntity {
     private boolean archived;
     private boolean shareable;
 
-    public Book(String title, String authorName, boolean shareable, User owner) {
+    public Book(String title, String authorName, boolean shareable,String isbn, String synopsis,String bookCover,boolean archived ,User owner) {
         this.title = title;
         this.authorName = authorName;
         this.shareable = shareable;
         this.owner = owner;
+        this.isbn = isbn;
+        this.synopsis=synopsis;
+        this.bookCover=bookCover;
+        this.archived=archived;
 
     }
 

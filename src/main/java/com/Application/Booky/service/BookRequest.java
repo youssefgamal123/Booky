@@ -18,7 +18,12 @@ public record BookRequest(
         String authorName,
 
 
-        Boolean Shareable
+        boolean Shareable,
+
+        String isbn,
+        String synopsis,
+        String bookCover,
+        boolean archived
 
 
 

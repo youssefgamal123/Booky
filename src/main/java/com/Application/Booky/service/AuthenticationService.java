@@ -3,18 +3,24 @@ package com.Application.Booky.service;
 import com.Application.Booky.Security.AuthenticationRequest;
 import com.Application.Booky.Security.AuthenticationResponse;
 import com.Application.Booky.Security.JwtService;
+import com.Application.Booky.entity.Token;
 import com.Application.Booky.entity.User;
 import com.Application.Booky.repository.RoleRepository;
+import com.Application.Booky.repository.TokenRepository;
 import com.Application.Booky.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,6 +34,8 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
+    private final TokenRepository tokenRepository;
 
     public void register(RegisterationRequest request) {
 
@@ -67,7 +75,18 @@ public class AuthenticationService {
             throw e;
         }
     }
+
+
+        // activating user by username
+    public void activateAccount(String Username) {
+
+        var user = userRepository.findByemail(Username).orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        user.setEnabled(true);
+        userRepository.save(user);
+        System.out.println("User enabled successfully");
+
     }
+}
 
 
 

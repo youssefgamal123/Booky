@@ -39,11 +39,7 @@ public class BookService {
     public Integer  save(BookRequest request, Authentication connectedUser) {
 
         User user = ( (User) connectedUser.getPrincipal());
-        System.out.println("HELLLLLLLLLLLLLLLO");
-        System.out.println(user);
-      //  log.info("User={}",user);
         Book book = bookMapper.toBook(request,user);
-       // log.info("UserPrincpal={}",connectedUser.getPrincipal());
         book.setOwner(user);
 
 

@@ -17,6 +17,10 @@ public class BookMapper {
                 request.title(),
                 request.authorName(),
                 request.Shareable(),
+                request.isbn(),
+                request.synopsis(),
+                request.bookCover(),
+                request.archived(),
                 user
 
         ) ;
@@ -46,7 +50,7 @@ public class BookMapper {
                 .title(history.getBook().getTitle())
                 .authorName(history.getBook().getAuthorName())
                 .isbn(history.getBook().getIsbn())
-                //.returned(history.isReturned())
+                .returned(history.isReturned())
                 .returnApproved(history.isReturnApproved())
                 .build();
     }

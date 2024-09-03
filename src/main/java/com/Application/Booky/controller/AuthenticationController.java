@@ -37,6 +37,17 @@ public class AuthenticationController {
     }
 
 
+    // activating user by username aka email as spring uses username instead of email (in terms of naming)
+
+    @GetMapping("/activate-account/{username}")
+    public void activate(@PathVariable String username){
+
+        service.activateAccount(username);
+
+    }
+
+
+
 
 
 }
